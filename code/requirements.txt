@@ -1,0 +1,12 @@
+pandas
+python-dotenv
+groq
+requests
+easyocr
+pytesseract
+Pillow
+faster-whisper
+sentence-transformers
+numpy
+tqdm
+tiktoken

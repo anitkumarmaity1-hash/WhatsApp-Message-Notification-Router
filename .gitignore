@@ -1,0 +1,9 @@
+code/.venv/
+code/.cache/
+code/.env
+code/__pycache__/
+*.pyc
+log.txt
+code/retrieval/__pycache__/
+code/router/__pycache__/
+code/media/__pycache__/

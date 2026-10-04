@@ -28,8 +28,8 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 # primary bucket is exhausted (or predicted to be) instead of burning
 # retries against a 429 that cannot succeed until the quota resets.
 GROQ_MODEL_PRIMARY = os.getenv(
-    "GROQ_MODEL_PRIMARY", os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"))
-GROQ_MODEL_FALLBACK = os.getenv("GROQ_MODEL_FALLBACK", "llama-3.1-8b-instant")
+    "GROQ_MODEL_PRIMARY", os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"))
+GROQ_MODEL_FALLBACK = os.getenv("GROQ_MODEL_FALLBACK", "openai/gpt-oss-20b")
 GROQ_MODEL = GROQ_MODEL_PRIMARY  # kept for backwards compatibility
 
 LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0"))

@@ -1,111 +1,111 @@
 message_id,action,message_type,reason,confidence,evidence_message_ids
-msg_023,notify,payment,The message is about a payment update and requires the user to review details in their banking app,0.9,message_0243;message_0101;message_0102
-msg_091,mute,scam,Pre-heuristic: clear scam pattern detected (expire). Muted for safety.,0.95,none
-msg_090,notify,personal,"The message is a direct 1:1 inquiry about a personal matter, a package mix-up, requiring a response.",0.9,none
-msg_048,mute,scam,"The message asks for immediate payment and contains a QR code, which are common scam indicators.",0.9,message_0151;message_0152;message_0100;message_0237
-msg_040,mute,spam,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
-msg_075,notify,event,"The message is about a ride update with changed pickup or route status, requiring the user to check the latest details in the app.",0.9,message_0206;message_0205
-msg_005,digest,unknown,"The message is an image with no extracted text and no clear indication of its purpose, so it is being digested for later review.",0.3,none
-msg_104,notify,event,"The message contains a concrete event with a specific date, time, and location that the user must attend to.",0.92,message_0224;message_0383
-msg_069,mute,spam,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
+msg_023,digest,payment,"Bank payment update informational, not urgent action required",0.86,message_0101;message_0102
+msg_091,mute,scam,Phishing request for login code,0.95,message_0238
+msg_090,notify,personal,Personal inquiry from a contact,0.92,none
+msg_048,notify,payment,Group admin request for immediate payment via QR,0.78,message_0151;message_0152
+msg_040,mute,greeting,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
+msg_075,digest,business_update,"Business status update about ride route change, not urgent or promotional",0.95,message_0206;message_0205
+msg_005,digest,promotion,"Peer-to-peer marketplace listing aiming to sell an item, classified as promotion",0.85,message_0095;message_0332;message_0114;message_0113
+msg_104,notify,event,"Personal request to pick up a jacket at a specific time and location, qualifies as an event",0.96,message_0224;message_0050
+msg_069,mute,greeting,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
 msg_107,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
 msg_070,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_003,digest,business_update,The message is a factual status update about the user's order from a verified business account with no marketing language or urgent action required.,0.9,message_0031;message_0400;message_0061
-msg_099,notify,personal,The message is a direct 1:1 ask related to work and requires attention before a meeting.,0.9,message_0227
-msg_008,digest,business_update,The message is a factual status update from a business with no marketing language or urgent request.,0.8,message_0072;message_0296;message_0071
+msg_003,digest,business_update,"Delivery status update from Amazon, not urgent or promotional",0.95,message_0031;message_0400;message_0061
+msg_099,notify,personal,Personal work note request with a direct ask to read before standup.,0.95,message_0227
+msg_008,digest,promotion,Business-initiated review request classified as promotional content.,0.85,message_0072;message_0296
 msg_092,digest,payment,Pre-heuristic: payment-related message (invoice/bill).,0.8,none
 msg_060,digest,promotion,Pre-heuristic: promotional content detected (offer).,0.85,none
-msg_004,notify,event,The message is about an upcoming appointment and requires the user to review details before the scheduled time.,0.9,message_0245;message_0005;message_0246
-msg_030,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_045,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_052,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_009,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_071,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_016,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_004,digest,business_update,"Business factual health update without marketing, classified as business_update.",0.94,message_0245;message_0005;message_0246
+msg_030,digest,promotion,"Image in marketplace group likely a peer-to-peer sale listing, classified as promotion.",0.86,message_0115;message_0232;message_0050
+msg_045,notify,urgent,"Time‑critical delivery request requiring immediate confirmation, classified as urgent.",0.96,message_0061;message_0031;message_0146
+msg_052,mute,scam,"Message asks for wallet details via link to release refund, typical phishing pattern, classified as scam.",0.98,message_0207;message_0159;message_0208;message_0160
+msg_009,digest,unknown,"Casual group chat about cricket highlights, no urgent or promotional content.",0.85,message_0074;message_0073
+msg_071,digest,personal,"Informal plan to meet tomorrow, personal arrangement within family group.",0.8,message_0197;message_0198
+msg_016,mute,scam,"Phishing-like account block alert requesting login via link, identified as scam.",0.96,message_0024;message_0087
 msg_065,digest,promotion,Pre-heuristic: promotional content detected (% off).,0.85,none
-msg_038,mute,spam,Pre-heuristic: heavily forwarded message (x10) from low-engagement sender. Muted.,0.9,none
+msg_038,mute,greeting,Pre-heuristic: heavily forwarded message (x10) from low-engagement sender. Muted.,0.9,none
 msg_086,notify,event,Pre-heuristic: schedule change/event detected (driver).,0.88,none
-msg_014,mute,scam,Pre-heuristic: clear scam pattern detected (expire). Muted for safety.,0.95,none
+msg_014,digest,promotion,Pre-heuristic: promotional content detected (% off).,0.85,none
 msg_094,digest,promotion,Pre-heuristic: promotional content detected (% off).,0.85,none
-msg_029,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_105,mute,spam,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
-msg_002,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_010,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
+msg_029,mute,spam,High forwarded count (8) indicates spam; content resembles promotional marketplace listing.,0.96,message_0095;message_0332;message_0114;message_0113
+msg_105,mute,forward,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
+msg_002,notify,payment,Direct request about a refund edge case involving payment; needs timely attention.,0.94,message_0003;message_0371;message_0169;message_0059;message_0170
+msg_010,digest,business_update,Business-initiated feedback request without marketing; classified as a factual business update.,0.86,message_0011;message_0242;message_0075;message_0076
 msg_078,mute,scam,Pre-heuristic: clear scam pattern detected (bank details). Muted for safety.,0.95,none
 msg_013,digest,promotion,Pre-heuristic: promotional content detected (discount).,0.85,none
-msg_018,mute,scam,Pre-heuristic: clear scam pattern detected (expire). Muted for safety.,0.95,none
+msg_018,mute,forward,Pre-heuristic: heavily forwarded message (x9) from low-engagement sender. Muted.,0.9,none
 msg_044,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_032,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_032,digest,unknown,Group request for lecture slides without urgency or marketing; falls outside defined categories,0.85,message_0119;message_0374;message_0285;message_0120;message_0404
 msg_106,notify,event,Pre-heuristic: schedule change/event detected (gate).,0.88,none
-msg_006,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_109,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_108,mute,scam,Pre-heuristic: clear scam pattern detected (expire). Muted for safety.,0.95,none
-msg_019,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_088,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_006,digest,unknown,"Administrative maintenance notice; not urgent, payment, or promotional",0.8,message_0029;message_0044;message_0067;message_0097;message_0271
+msg_109,notify,payment,Urgent payment request for access‑card penalty requiring immediate action,0.92,message_0151;message_0152;message_0100;message_0237;message_0150
+msg_108,mute,scam,"Phishing request for PIN via suspicious link, classified as scam",0.96,message_0094;message_0093;message_0236;message_0275;message_0277
+msg_019,mute,scam,"Phishing message urging click on link to verify account, classified as scam",0.95,message_0277;message_0094;message_0093;message_0236;message_0275
+msg_088,mute,promotion,"Marketplace item offer with CTA, user has muted the group",0.88,message_0224;message_0050;message_0115;message_0232;message_0383
 msg_056,notify,event,Pre-heuristic: schedule change/event detected (appointment).,0.88,none
 msg_027,digest,promotion,Pre-heuristic: promotional content detected (book now).,0.85,none
-msg_050,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_083,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_050,digest,business_update,"Business factual status update without marketing, not urgent",0.95,message_0279;message_0278;message_0156;message_0155;message_0372
+msg_083,digest,personal,"Group request for document review, not urgent or promotional",0.9,message_0219
 msg_063,digest,payment,Pre-heuristic: payment-related message (invoice/bill).,0.8,none
-msg_033,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_061,mute,spam,Pre-heuristic: heavily forwarded message (x8) from low-engagement sender. Muted.,0.9,none
-msg_020,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_033,digest,greeting,"Friendly check‑in with no urgent request, classified as a greeting.",0.96,message_0121
+msg_061,mute,greeting,Pre-heuristic: heavily forwarded message (x8) from low-engagement sender. Muted.,0.9,none
+msg_020,mute,scam,"Contains a suspicious link requesting account verification, matching scam criteria.",0.98,message_0334
 msg_017,digest,payment,Pre-heuristic: payment-related message (invoice/bill).,0.8,none
-msg_058,mute,spam,Pre-heuristic: heavily forwarded message (x10) from low-engagement sender. Muted.,0.9,none
+msg_058,mute,forward,Pre-heuristic: heavily forwarded message (x10) from low-engagement sender. Muted.,0.9,none
 msg_026,digest,payment,Pre-heuristic: payment-related message (invoice/bill).,0.8,none
-msg_047,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_047,notify,event,Group maintenance notice with concrete time and location qualifies as an event needing timely awareness,0.95,message_0130;message_0150;message_0190;message_0142;message_0180
 msg_046,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
 msg_042,mute,scam,Pre-heuristic: clear scam pattern detected (security alert). Muted for safety.,0.95,none
 msg_079,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_098,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_037,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_007,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_098,notify,urgent,Urgent personal request needing immediate decision about clinic appointment,0.95,message_0359;message_0168;message_0226
+msg_037,digest,unknown,Group operational request not fitting other categories,0.75,message_0001;message_0130
+msg_007,digest,unknown,General potluck announcement with no urgent or actionable request,0.85,none
 msg_085,mute,scam,Pre-heuristic: clear scam pattern detected (share the ott). Muted for safety.,0.95,none
-msg_001,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_021,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
+msg_001,notify,urgent,Immediate water supply issue requiring residents to act within minutes,0.95,message_0057;message_0139;message_0240
+msg_021,notify,payment,Payment due today requiring residents to complete before deadline,0.94,message_0068;message_0098;message_0271
 msg_028,digest,promotion,Pre-heuristic: promotional content detected (book now).,0.85,none
-msg_012,mute,spam,Pre-heuristic: heavily forwarded message (x9) from low-engagement sender. Muted.,0.9,none
-msg_064,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_103,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_031,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_057,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_087,mute,spam,Pre-heuristic: bulk broadcast with dial/press instructions. Muted as spam.,0.9,none
-msg_067,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_039,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_082,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
+msg_012,mute,forward,Pre-heuristic: heavily forwarded message (x9) from low-engagement sender. Muted.,0.9,none
+msg_064,digest,promotion,Promotional movie ticket offer in marketplace group,0.92,message_0184;message_0088;message_0202
+msg_103,notify,event,Pickup request with specific time and location,0.94,message_0065;message_0049;message_0382
+msg_031,notify,event,"Corrected: time-critical event should notify. Group meeting invitation with date and time, classified as event",0.8,none
+msg_057,notify,urgent,"Build failure reported, qualifies as urgent technical incident",0.94,message_0169;message_0059;message_0003
+msg_087,mute,spam,Promotional real‑estate broadcast flagged as spam and group is muted,0.96,message_0204;message_0358
+msg_067,notify,payment,"Maintenance payment reminder due today, payment type requiring immediate action",0.93,message_0067;message_0097
+msg_039,notify,payment,"User requests a fee receipt for a school field‑trip, a payment‑related request needing immediate action",0.95,message_0364;message_0037
+msg_082,notify,urgent,"Message reports a live payment failure and asks to join an incident bridge immediately, qualifying as a real‑time technical emergency",0.96,message_0218
 msg_066,digest,promotion,Pre-heuristic: promotional content detected (% off).,0.85,none
-msg_049,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
+msg_049,digest,promotion,"Business‑originated image showing a brand name, interpreted as a promotional communication without urgent or transactional content",0.78,message_0153
 msg_015,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_051,mute,spam,Pre-heuristic: bulk broadcast with dial/press instructions. Muted as spam.,0.9,none
-msg_097,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_089,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_053,mute,spam,Pre-heuristic: heavily forwarded message (x6) from low-engagement sender. Muted.,0.9,none
-msg_059,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_024,mute,spam,Pre-heuristic: bulk broadcast with dial/press instructions. Muted as spam.,0.9,none
+msg_051,digest,promotion,Pre-heuristic: promotional content detected (discount).,0.85,none
+msg_097,digest,personal,Personal status update with no urgent request,0.96,message_0054;message_0225;message_0167;message_0226;message_0359
+msg_089,digest,personal,"Personal notification about a left item, not an urgent emergency",0.95,none
+msg_053,mute,forward,Pre-heuristic: heavily forwarded message (x6) from low-engagement sender. Muted.,0.9,none
+msg_059,mute,scam,"Message asks for account details and promises a quick payout, a classic scam pattern",0.95,message_0214;message_0053;message_0213;message_0045;message_0023
+msg_024,digest,promotion,Pre-heuristic: promotional content detected (discount).,0.85,none
 msg_072,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_036,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_076,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_055,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_102,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_080,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
+msg_036,mute,scam,"Message asks to click a verification link and provides a suspicious domain, matching scam criteria",0.96,message_0283;message_0128;message_0127
+msg_076,mute,scam,"Message requests wallet details via a link to release a refund, typical phishing scam pattern",0.95,message_0207;message_0159;message_0208;message_0160
+msg_055,notify,urgent,"User requests immediate action within minutes, qualifying as a real‑time urgent request",0.9,message_0166
+msg_102,notify,personal,"Direct operational request to stay online for 30 minutes, a time‑sensitive personal message",0.9,message_0371;message_0230
+msg_080,notify,urgent,Real-time gate blockage notice requiring immediate action,0.95,message_0130;message_0150;message_0190;message_0142;message_0180
 msg_093,mute,scam,Pre-heuristic: clear scam pattern detected (otp). Muted for safety.,0.95,none
-msg_034,mute,spam,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
-msg_035,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_101,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_041,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_011,mute,spam,Pre-heuristic: heavily forwarded message (x8) from low-engagement sender. Muted.,0.9,none
+msg_034,mute,greeting,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
+msg_035,digest,promotion,Promotional pitch for RazorpayX payouts,0.92,message_0281;message_0125;message_0126;message_0283;message_0128
+msg_101,digest,personal,Friendly personal check‑in with no urgent request.,0.95,message_0268;message_0370;message_0229
+msg_041,digest,unknown,Business survey request not urgent or promotional; does not fit other categories.,0.78,message_0137;message_0138
+msg_011,mute,greeting,Pre-heuristic: heavily forwarded message (x8) from low-engagement sender. Muted.,0.9,none
 msg_110,mute,scam,Pre-heuristic: clear scam pattern detected (suspended). Muted for safety.,0.95,none
 msg_095,notify,payment,Pre-heuristic: failed/overdue payment requires immediate attention.,0.9,none
-msg_074,mute,spam,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
+msg_074,mute,forward,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
 msg_073,mute,scam,Pre-heuristic: clear scam pattern detected (login attempt). Muted for safety.,0.95,none
-msg_054,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_068,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_100,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_062,mute,spam,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
-msg_096,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_043,mute,spam,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
-msg_077,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_081,digest,event,Corrected: event/time-specific content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
-msg_025,digest,unknown,Fallback default: routed to digest pending review (LLM call failed).,0.2,none
-msg_084,mute,spam,Pre-heuristic: bulk broadcast with dial/press instructions. Muted as spam.,0.9,none
-msg_022,digest,payment,Corrected: payment content detected. Fallback default: routed to digest pending review (LLM call failed).,0.75,none
+msg_054,mute,scam,"Message asks for payment via link for a loan, typical scam pattern",0.96,message_0389;message_0163;message_0203;message_0220;message_0358
+msg_068,digest,unknown,Generic group chat message with no clear category,0.85,none
+msg_100,notify,payment,Urgent payment escalation requiring immediate action,0.95,message_0362;message_0228;message_0249;message_0117;message_0118
+msg_062,mute,forward,Pre-heuristic: heavily forwarded message (x7) from low-engagement sender. Muted.,0.9,none
+msg_096,notify,personal,Personal request to retrieve passport before 18h,0.9,none
+msg_043,mute,forward,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none
+msg_077,digest,event,"Event notification with consent form, not urgent",0.75,message_0037;message_0364;message_0051;message_0403;message_0002
+msg_081,notify,event,Urgent pick‑up location change for today,0.9,message_0217;message_0106;message_0140;message_0058;message_0361
+msg_025,digest,business_update,"Order status update, not urgent",0.7,message_0239;message_0004;message_0105;message_0106;message_0361
+msg_084,digest,promotion,Pre-heuristic: promotional content detected (% off).,0.85,none
+msg_022,mute,scam,"Message asks recipients to click a payment link and send a screenshot, matching scam pattern and similar flagged evidence",0.92,message_0152;message_0151;message_0237;message_0100;message_0099

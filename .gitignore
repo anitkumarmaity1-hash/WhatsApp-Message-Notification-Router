@@ -7,3 +7,4 @@ log.txt
 code/retrieval/__pycache__/
 code/router/__pycache__/
 code/media/__pycache__/
+.venv/

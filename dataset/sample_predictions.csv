@@ -1,31 +1,31 @@
-message_id,action,message_type,reason,confidence,evidence_message_ids
-sample_msg_001,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_002,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_003,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_004,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_005,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_006,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_007,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_008,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_009,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_010,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_011,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_012,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_013,mute,spam,"Fallback safety rule triggered (LLM call failed): suspicious keywords=none, forwarded_count=6.",0.4,none
-sample_msg_014,mute,spam,"Fallback safety rule triggered (LLM call failed): suspicious keywords=none, forwarded_count=11.",0.4,none
-sample_msg_015,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_019,mute,scam,"Fallback safety rule triggered (LLM call failed): suspicious keywords=['otp'], forwarded_count=0.",0.4,none
-sample_msg_020,mute,scam,"Fallback safety rule triggered (LLM call failed): suspicious keywords=['otp'], forwarded_count=0.",0.4,none
-sample_msg_041,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_042,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_043,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_044,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_045,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_046,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_047,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_048,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_049,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_050,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_051,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_052,digest,unknown,Fallback default (LLM call failed): routed to digest pending review.,0.2,none
-sample_msg_053,mute,scam,"Fallback safety rule triggered (LLM call failed): suspicious keywords=['otp'], forwarded_count=0.",0.4,none
+message_id,action,message_type,reason,confidence,evidence_message_ids,model_used
+sample_msg_001,notify,urgent,Group notice about immediate water supply issue requiring prompt action,0.95,message_0129;message_0149;message_0189;message_0141;message_0179,openai/gpt-oss-120b
+sample_msg_002,notify,event,Pre-heuristic: schedule change/event detected (bus).,0.88,none,pre_llm_heuristic
+sample_msg_003,notify,payment,Pre-heuristic: failed/overdue payment requires immediate attention.,0.9,none,pre_llm_heuristic
+sample_msg_004,digest,business_update,Amazon order status update without marketing content,0.96,message_0239;message_0004;message_0105;message_0106;message_0361,openai/gpt-oss-120b
+sample_msg_005,digest,business_update,"Health service update about appointment/prescription, not promotional",0.95,message_0245;message_0005;message_0246;message_0064;message_0063,openai/gpt-oss-120b
+sample_msg_006,notify,personal,Direct personal request for a call and pickup confirmation,0.96,message_0006,openai/gpt-oss-120b
+sample_msg_007,digest,promotion,Travel package promotion with CTA to view itinerary,0.94,message_0272;message_0033;message_0007;message_0109;message_0110,openai/gpt-oss-120b
+sample_msg_008,digest,unknown,Corrected mute->digest: nothing here is unwanted. Evidence suggests mute and message lacks a clear actionable category,0.75,message_0283;message_0128;message_0127,openai/gpt-oss-120b
+sample_msg_009,digest,greeting,"Corrected mute->digest: nothing here is unwanted. Pure greeting with no required response; prior similar messages were dismissed/muted, so mute.",0.75,message_0132;message_0131;message_0343;message_0082,openai/gpt-oss-120b
+sample_msg_010,digest,personal,"Casual group inquiry about a match, not urgent or actionable; treat as personal content and digest.",0.86,none,openai/gpt-oss-120b
+sample_msg_011,digest,greeting,Pre-heuristic: purely social greeting with no actionable content.,0.9,none,pre_llm_heuristic
+sample_msg_012,digest,promotion,"Peer‑to‑peer sale listing, classified as promotion; no spam or mute signals, so digest.",0.9,message_0012,openai/gpt-oss-120b
+sample_msg_013,mute,greeting,Pre-heuristic: heavily forwarded message (x6) from low-engagement sender. Muted.,0.9,none,pre_llm_heuristic
+sample_msg_014,mute,forward,Pre-heuristic: heavily forwarded message (x11) from low-engagement sender. Muted.,0.9,none,pre_llm_heuristic
+sample_msg_015,mute,promotion,Pre-heuristic: user opted out of this business and message is promotional.,0.9,none,pre_llm_heuristic
+sample_msg_019,mute,scam,Pre-heuristic: clear scam pattern detected (credential/OTP request). Muted for safety.,0.95,none,pre_llm_heuristic
+sample_msg_020,mute,scam,Pre-heuristic: clear scam pattern detected (credential/OTP request). Muted for safety.,0.95,none,pre_llm_heuristic
+sample_msg_041,digest,personal,"Casual non‑urgent check‑in in a family group, not requiring immediate attention.",0.92,message_0046,openai/gpt-oss-120b
+sample_msg_042,notify,urgent,Pre-heuristic: family health emergency requires immediate attention.,0.95,none,pre_llm_heuristic
+sample_msg_043,mute,spam,Marked as spam with evidence suggesting mute and user opted out of promotions.,0.95,message_0048;message_0357,openai/gpt-oss-120b
+sample_msg_044,digest,promotion,Likely a marketplace promotion image based on group context and similar past messages.,0.78,message_0095;message_0390;message_0332;message_0114;message_0113,openai/gpt-oss-120b
+sample_msg_045,mute,unknown,Pre-heuristic: user has muted this group and message is not urgent/payment.,0.85,none,pre_llm_heuristic
+sample_msg_046,notify,event,"Contains a field‑trip consent form with date/time details, indicating an upcoming event.",0.85,message_0037;message_0364;message_0051;message_0403;message_0002,openai/gpt-oss-120b
+sample_msg_047,mute,promotion,Pre-heuristic: promotional content detected (up to).,0.85,none,pre_llm_heuristic
+sample_msg_048,digest,business_update,"Advisory image from verified business without marketing, classified as business update",0.95,message_0412;message_0221;message_0369,openai/gpt-oss-120b
+sample_msg_049,notify,personal,"Personal inquiry about volunteer coordination, classified as personal",0.96,none,openai/gpt-oss-120b
+sample_msg_050,digest,personal,"Personal status update with no action required, classified as personal",0.94,none,openai/gpt-oss-120b
+sample_msg_051,notify,urgent,"Urgent request to come online immediately due to escalation, classified as urgent",0.97,message_0228;message_0362;message_0249,openai/gpt-oss-120b
+sample_msg_052,mute,scam,Pre-heuristic: clear scam pattern detected (credential/OTP request). Muted for safety.,0.95,none,pre_llm_heuristic
+sample_msg_053,mute,scam,Pre-heuristic: clear scam pattern detected (credential/OTP request). Muted for safety.,0.95,none,pre_llm_heuristic

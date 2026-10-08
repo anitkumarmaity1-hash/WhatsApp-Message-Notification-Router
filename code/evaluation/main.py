@@ -1,144 +1,157 @@
 """
-Lightweight local evaluator.
+Local evaluator: runs the REAL pipeline on the labeled rows of dataset/sample_messages.csv
+and compares each prediction with that row's own action/message_type.
 
-IMPORTANT: dataset/sample_messages.csv and dataset/messages.csv contain
-DIFFERENT messages with unrelated, independently-numbered message_ids
-("sample_msg_003" is not the same message as "msg_003" -- they just happen
-to share the trailing digit "3"). sample_messages.csv exists only "to
-understand the expected output format and style" (see problem_statement.md)
--- there is no ground truth available for messages.csv/output.csv at all;
-that comparison happens on hidden labels after submission.
+(sample_messages.csv and messages.csv have unrelated IDs; there are no local labels for
+messages.csv, so this 30-row check is the only honest local signal available.)
 
-The only thing we CAN honestly self-check locally is: does our own
-pipeline, run on sample_messages.csv's own inputs, reproduce the labels
-that ship alongside them? That's what this script does -- it re-runs the
-real routing pipeline (same code path as main.py) against
-dataset/sample_messages.csv and compares each row's prediction to that
-same row's own action/message_type, matched by IDENTICAL message_id.
+What changed:
+  * A run in which the LLM failed is DETECTED and flagged INVALID (the old script happily
+    reported ~53% "accuracy" for an all-"digest / 0.2" fallback run). Invalid runs are written
+    to a separate file and never overwrite sample_predictions.csv; exit code is 1.
+  * --no-llm evaluates only the deterministic layer (rules + fallback) with zero API tokens,
+    so you can regression-test feature/rule changes for free.
+  * 95% Wilson intervals show how noisy a 30-row score is; per-class recall, confusion counts
+    and a confidence-calibration check are added.
 
 Usage:
-    python evaluation/main.py
+    python evaluation/main.py            # real run (needs LLM access)
+    python evaluation/main.py --no-llm   # deterministic layer only, no tokens used
 """
+import argparse
 import csv
+import math
+import sys
+from collections import Counter
 from dataclasses import replace
 from pathlib import Path
-import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config import DATASET_DIR  # noqa: E402
 from data_loader import load_data  # noqa: E402
 from pipeline import run_pipeline  # noqa: E402
 
-PRED_OUTPUT_PATH = DATASET_DIR / "sample_predictions.csv"
+LABEL_COLS = ["action", "message_type", "reason",
+              "confidence", "evidence_message_ids"]
+OUT_COLS = ["message_id", "action", "message_type", "reason", "confidence",
+            "evidence_message_ids", "model_used"]
+NON_LLM = {"pre_llm_heuristic", "rule_based_fallback", "none"}
 
 
-def _read_rows(path: Path) -> dict:
-    rows = {}
-    with open(path, newline="", encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            rows[str(row["message_id"])] = row
-    return rows
+def wilson(k: int, n: int, z: float = 1.96):
+    if n == 0:
+        return 0.0, 0.0
+    p = k / n
+    d = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / d
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return max(0.0, centre - half), min(1.0, centre + half)
 
 
-def _write_rows(path: Path, rows: list) -> None:
-    cols = ["message_id", "action", "message_type",
-            "reason", "confidence", "evidence_message_ids", "model_used"]
+def fmt(k: int, n: int) -> str:
+    lo, hi = wilson(k, n)
+    return f"{k}/{n} = {k / n:.1%}  (95% CI {lo:.0%}-{hi:.0%})"
+
+
+def write_rows(path: Path, rows: list) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=cols)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow({k: row.get(k, "") for k in cols})
+        w = csv.DictWriter(f, fieldnames=OUT_COLS)
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in OUT_COLS})
 
 
-def main():
-    sample_path = DATASET_DIR / "sample_messages.csv"
-    if not sample_path.exists():
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--no-llm", action="store_true",
+                    help="evaluate rules/fallback only (0 tokens)")
+    args = ap.parse_args()
+
+    if args.no_llm:
+        import router.decision_engine as de
+
+        def _no_llm(*_a, **_k):
+            raise RuntimeError("LLM disabled by --no-llm")
+        de.call_llm_json = _no_llm
+
+    data = load_data()
+    if data.sample_messages.empty:
         print("Need dataset/sample_messages.csv to evaluate.")
-        return
+        return 1
 
-    print("[eval] loading dataset and swapping in sample_messages.csv "
-          "as the routed set ...")
-    data_context = load_data()
-    if data_context.sample_messages.empty:
-        print("sample_messages.csv is empty or failed to load.")
-        return
-
-    # Run the REAL pipeline (same code as main.py) but route the labeled
-    # sample rows instead of messages.csv, so context lookups (user,
-    # group, business, history, evidence) are the genuine ones.
-    sample_as_input = data_context.sample_messages.drop(
-        columns=["action", "message_type", "reason",
-                 "confidence", "evidence_message_ids"],
-        errors="ignore",
-    )
-    eval_context = replace(data_context, messages=sample_as_input)
-    results = run_pipeline(eval_context)
-    _write_rows(PRED_OUTPUT_PATH, results)
-    print(f"[eval] wrote predictions to {PRED_OUTPUT_PATH}")
-
-    truth = _read_rows(sample_path)
+    truth_df = data.sample_messages
+    inputs = truth_df.drop(columns=LABEL_COLS, errors="ignore")
+    results = run_pipeline(replace(data, messages=inputs))
+    truth = {str(r["message_id"]): r for r in truth_df.to_dict("records")}
     preds = {str(r["message_id"]): r for r in results}
+    ids = [m for m in truth if m in preds]
+    n = len(ids)
+    if not n:
+        print("No overlapping message_ids - pipeline returned nothing for the sample rows.")
+        return 1
 
-    overlap = [mid for mid in truth if mid in preds]
-    if not overlap:
-        print("No overlapping message_ids -- pipeline did not return a "
-              "prediction for every sample row.")
-        return
+    # ---- is this run a valid evaluation of the LLM system? ----
+    tiers = Counter(preds[m].get("model_used", "unknown") for m in ids)
+    llm_rows = sum(c for t, c in tiers.items() if t not in NON_LLM)
+    fallback_rows = tiers.get("rule_based_fallback", 0) + tiers.get("none", 0)
+    needs_llm = n - tiers.get("pre_llm_heuristic", 0)
+    valid = args.no_llm or (needs_llm == 0 or llm_rows / needs_llm >= 0.8)
 
-    action_correct = sum(
-        1 for mid in overlap if preds[mid]["action"] == truth[mid]["action"])
-    type_correct = sum(
-        1 for mid in overlap if preds[mid]["message_type"] == truth[mid]["message_type"])
+    a_ok = sum(preds[m]["action"] == truth[m]["action"] for m in ids)
+    t_ok = sum(preds[m]["message_type"] == truth[m]
+               ["message_type"] for m in ids)
 
-    n = len(overlap)
-    missing = [mid for mid in truth if mid not in preds]
+    mode = "RULES-ONLY (--no-llm)" if args.no_llm else "FULL PIPELINE"
+    print(f"\n=== {mode} on {n} labeled sample rows ===")
+    print("answered by:", dict(tiers))
+    print(f"action accuracy:       {fmt(a_ok, n)}")
+    print(f"message_type accuracy: {fmt(t_ok, n)}")
 
-    print(f"Evaluated on {n} labeled sample rows")
-    if missing:
-        print(
-            f"  WARNING: {len(missing)} sample id(s) had no matching prediction: {missing}")
+    print("\nAction recall per class (true -> predicted counts):")
+    for cls in ("notify", "digest", "mute"):
+        rows = [m for m in ids if truth[m]["action"] == cls]
+        if rows:
+            dist = Counter(preds[m]["action"] for m in rows)
+            print(
+                f"  {cls:7} recall {sum(preds[m]['action'] == cls for m in rows)}/{len(rows)}   -> {dict(dist)}")
+
+    ok = [float(preds[m]["confidence"])
+          for m in ids if preds[m]["action"] == truth[m]["action"]]
+    bad = [float(preds[m]["confidence"])
+           for m in ids if preds[m]["action"] != truth[m]["action"]]
+    if ok and bad:
+        print(f"\nCalibration: mean confidence when right {sum(ok) / len(ok):.2f} vs wrong "
+              f"{sum(bad) / len(bad):.2f} (a good system is clearly lower when wrong)")
+
+    print("\nBy tier:")
+    for tier, c in tiers.most_common():
+        sub = [m for m in ids if preds[m].get("model_used", "unknown") == tier]
+        print(f"  {tier}: n={c} action={sum(preds[m]['action'] == truth[m]['action'] for m in sub)}/{c} "
+              f"type={sum(preds[m]['message_type'] == truth[m]['message_type'] for m in sub)}/{c}")
+
+    wrong = [m for m in ids if preds[m]["action"] != truth[m]["action"]]
+    if wrong:
+        print("\nAction mismatches (first 10):")
+        for m in wrong[:10]:
+            print(f"  {m}: predicted {preds[m]['action']}/{preds[m]['message_type']}  "
+                  f"expected {truth[m]['action']}/{truth[m]['message_type']}")
+
+    # ---- output file: never let an invalid (fallback) run masquerade as a real one ----
+    if valid:
+        path = DATASET_DIR / \
+            ("sample_predictions_rules_only.csv" if args.no_llm else "sample_predictions.csv")
+    else:
+        path = DATASET_DIR / "sample_predictions_INVALID_llm_failed.csv"
+        print(f"\n!!! INVALID EVALUATION: only {llm_rows}/{needs_llm} LLM-eligible rows were answered by an LLM "
+              f"({fallback_rows} used the blind fallback). The scores above do NOT measure the system.\n"
+              f"    Check GROQ_API_KEY / daily token budget / Ollama, then re-run. "
+              f"(Use --no-llm to evaluate the deterministic layer on purpose.)")
+    write_rows(path, results)
+    print(f"\n[eval] wrote predictions to {path}")
     print(
-        f"  action accuracy:       {action_correct}/{n} = {action_correct/n:.2%}")
-    print(
-        f"  message_type accuracy: {type_correct}/{n} = {type_correct/n:.2%}")
-
-    mismatches = [mid for mid in overlap if preds[mid]
-                  ["action"] != truth[mid]["action"]]
-    if mismatches:
-        print("\nSample mismatches (action):")
-        for mid in mismatches[:10]:
-            print(
-                f"  id={mid} predicted={preds[mid]['action']} expected={truth[mid]['action']}")
-
-    type_mismatches = [mid for mid in overlap if preds[mid]
-                       ["message_type"] != truth[mid]["message_type"]]
-    if type_mismatches:
-        print("\nSample mismatches (message_type):")
-        for mid in type_mismatches[:10]:
-            print(
-                f"  id={mid} predicted={preds[mid]['message_type']} expected={truth[mid]['message_type']}")
-
-    # Accuracy broken down by which tier actually produced the decision.
-    by_model: dict = {}
-    for mid in overlap:
-        m = preds[mid].get("model_used", "unknown")
-        by_model.setdefault(m, {"n": 0, "action_ok": 0, "type_ok": 0})
-        by_model[m]["n"] += 1
-        if preds[mid]["action"] == truth[mid]["action"]:
-            by_model[m]["action_ok"] += 1
-        if preds[mid]["message_type"] == truth[mid]["message_type"]:
-            by_model[m]["type_ok"] += 1
-
-    if len(by_model) > 1:
-        print("\nAccuracy by model tier:")
-        for model, stats in sorted(by_model.items(), key=lambda kv: -kv[1]["n"]):
-            n = stats["n"]
-            print(
-                f"  {model}: n={n}  action={stats['action_ok']}/{n}="
-                f"{stats['action_ok']/n:.0%}  message_type={stats['type_ok']}/{n}="
-                f"{stats['type_ok']/n:.0%}"
-            )
+        f"[eval] note: n={n} is small; treat differences under ~15 points as noise.")
+    return 0 if valid else 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

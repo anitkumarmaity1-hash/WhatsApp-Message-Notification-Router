@@ -125,8 +125,11 @@ def _pre_llm_heuristic(
     strong_event_present = any(kw in text for kw in ["pickup", "gate", "meeting at", "flight", "appointment",
                                                      "rescheduled", "moved to", "changed to", "cab", "driver"])
     if content_signals.get("has_event") and content_signals.get("has_time_date") and strong_event_present and not content_signals.get("has_scam"):
-        action = "notify" if any(kw in text for kw in [
-                                 "changed", "moved", "rescheduled", "postponed", "cancelled"]) else "digest"
+        changed = any(kw in text for kw in [
+            "changed", "change", "moved", "rescheduled", "postponed", "cancelled", "canceled",
+            "delayed", "preponed"])
+        same_day_early = "early" in text and any(kw in text for kw in ["today", "mins", "minutes", "tonight"])
+        action = "notify" if (changed or same_day_early) else "digest"
         return {
             "action": action,
             "message_type": "event",
@@ -145,8 +148,9 @@ def _pre_llm_heuristic(
         if user_signals.get("business_has_history") or user_signals.get("sender_open_rate", 0) > 0.3:
             action = "digest"
         else:
-            action = "mute" if user_signals.get(
-                "sender_dismiss_rate", 0) > 0.5 else "digest"
+            dismiss = max(user_signals.get("sender_dismiss_rate", 0),
+                          user_signals.get("user_dismissal_rate", 0))
+            action = "mute" if dismiss > 0.5 else "digest"
         return {
             "action": action,
             "message_type": "promotion",
@@ -351,6 +355,24 @@ def _post_llm_correction(
                 "confidence": 0.75,
                 "evidence_message_ids": evidence_ids,
             }
+
+    # CORRECTION 11: mute is reserved for unwanted content.
+    # In the labeled data, mute only ever appears for scam / spam / forward / promotion / greeting
+    # (the greeting being in a muted group) and never for personal, event, business_update,
+    # unknown, payment or urgent messages. If the LLM mutes one of those without a concrete reason
+    # (muted group, opt-out, spam/scam/promo/forward signals, or a sender the user ignores),
+    # the safe, useful action is digest - not silently dropping it.
+    weak_mute_types = {"personal", "event", "business_update", "unknown", "payment", "urgent", "greeting"}
+    has_mute_reason = any([
+        user_signals.get("group_muted"), user_signals.get("business_opted_out"),
+        content_signals.get("has_scam"), content_signals.get("has_spam"),
+        content_signals.get("has_promo"), content_signals.get("has_forward"),
+        user_signals.get("sender_dismiss_rate", 0) > 0.6,
+        user_signals.get("sender_mute_rate", 0) > 0.3,
+    ])
+    if decision.get("action") == "mute" and decision.get("message_type") in weak_mute_types and not has_mute_reason:
+        decision = {**decision, "action": "digest", "confidence": min(float(confidence), 0.75),
+                    "reason": f"Corrected mute->digest: nothing here is unwanted. {reason}"}
 
     return decision
 

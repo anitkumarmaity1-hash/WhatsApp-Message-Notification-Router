@@ -5,8 +5,9 @@ requests
 easyocr
 pytesseract
 Pillow
-faster-whisper
 sentence-transformers
 numpy
 tqdm
 tiktoken
+faster-whisper>=1.0
+av>=11
